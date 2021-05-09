@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Legit Bouys</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+
+    <!-- Alternative to Bootstrap 3 Glyphicons -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+    <link rel='stylesheet' href='{% static "css/woocommerce-layout.css" %}' type='text/css' media='all'/>
+    <link rel='stylesheet' href='{% static "css/woocommerce-smallscreen.css" %}' type='text/css' media='only screen and (max-width: 768px)'/>
+    <link rel='stylesheet' href='{% static "css/woocommerce.css" %}' type='text/css' media='all'/>
+    <link rel='stylesheet' href='{% static "css/font-awesome.min.css" %}' type='text/css' media='all'/>
+    <link rel='stylesheet' href='{% static "style.css" %}' type='text/css' media='all'/>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Oswald:400,500,700%7CRoboto:400,500,700%7CHerr+Von+Muellerhoff:400,500,700%7CQuattrocento+Sans:400,500,700' type='text/css' media='all'/>
+    <link rel='stylesheet' href='{% static "css/easy-responsive-shortcodes.css" %}' type='text/css' media='all'/>
+
+  </head>
+  <body class="blog">
+    <div id="page">
+        <div class="container">
+            <header id="masthead" class="site-header">
+            <div class="site-branding">
+                <h1 class="site-title"><a href="{% url 'blog:home' %}" rel="home">Legit Bouys</a></h1>
+                <h2 class="site-description">A Simple website to Blog</h2>
+            </div>
+            <nav id="site-navigation" class="main-navigation">
+            <button class="menu-toggle">Menu</button>
+            <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+            <div class="menu-menu-1-container">
+                <ul id="menu-menu-1" class="menu">
+                    <li><a href="{% url 'blog:home' %}">Blog</a></li>
+                    {% if user.is_authenticated %}
+                      <li><a href="{% url 'blog:create_post' %}">New post</a></li>
+                      <li><a href="{% url 'accounts:all_users' %}">All Users</a></li>
+                      <li><a ></a>Welcome {{user.username}}</li>   
+                      <li><a href="#"> <img style="width: 50px;height:50px;border-radius:50px;float:right;margin-right:0px;" src="{{user.userprofile.profilepic.url}}" alt=""> </a>
+                      <ul class="sub-menu">
+                          <li><a href="{% url 'blog:profile_page' user.username %}">Profile</a></li>
+                          <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                      </ul>
+                        
+                    {% else %}
+                        <li><a href="{% url 'accounts:signup' %}">Create profile</a></li>
+                        <li><a href="{% url 'accounts:login' %}">Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            </nav>
+            </header>
+
+    <div class="container mycontent">
+      {% block content %}
+
+      {% endblock %}
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+   
+
+    <!-- Latest compiled and minified jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+    <script src='{% static "js/jquery.js" %}'></script>
+    <script src='{% static "js/plugins.js" %}'></script>
+    <script src='{% static "js/scripts.js" %}'></script>
+    <script src='{% static "js/masonry.pkgd.min.js" %}'></script>
+  </body>
+</html>

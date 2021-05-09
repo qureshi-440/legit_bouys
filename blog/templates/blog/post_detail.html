@@ -1,0 +1,167 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load hitcount_tags %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <div id="content" class="site-content">
+        <div id="primary" class="content-area column two-thirds">
+            <main id="main" class="site-main" role="main">
+            <article>
+                <header class="entry-header">
+                    <h1 class="entry-title">{{post.title}}</h1>
+                    <div class="entry-meta">
+                            <span class="posted-on"><time class="entry-date published">{{post.created_date}}</time></span>						
+                            <span class="comments-link"><a href="#comments">Leave a comment</a></span>
+                            <span><p>Page Views : {% get_hit_count for post %}</p></span>
+                        </div>
+                    {% if post.thumbnail %}
+                        <div class="entry-thumbnail">					
+                            <img src="{{post.thumbnail.url}}" alt="">
+                        </div>
+                    {% endif %}
+                </header>
+            <!-- .entry-header -->
+                <div class="entry-content">
+                    {{post.body|safe}}
+                    <span><p>likes - {{post.get_likes}}</p></span>
+                </div>
+                
+                {% if user.is_authenticated %}
+                    {% if user.username == post.auther.username %}
+                        <a href="{% url 'blog:post_update' post.slug post.pk  %}" class="btn btn-primary">Update Post </a>
+                    {% endif %}
+                {% endif %}
+                <!-- .entry-content -->
+                <footer class="entry-footer">
+                    <form action="{% url 'blog:post_like' post.pk %}" method="post">
+                        {% csrf_token %}
+                        {% if liked %}
+                            <button type="submit" style="background: none;border:none" ><img src="{% static 'images/liked.png' %}" style="max-height: 75px;max-width:75px;" ></button>
+                        {% else %}
+                            <button type="submit" style="background: none;border:none" ><img src="{% static 'images/like.png' %}" style="max-height: 75px;max-width:75px" ></button>
+                            <p>like</p>
+                        {% endif %}
+                    </form>
+                    <div>
+                        <br><br>
+                        {% if user.is_authenticated %}
+                            <h3>Add Comment</h3>
+                            <form action="{% url 'blog:create_comment' post.slug %}" method="post">
+                                {% csrf_token %}
+                                <label for="message">Message</label>
+                                <!-- <input type="textarea" name="message"> -->
+                                <textarea name="message" id="" cols="30" rows="5"></textarea>
+                                <input type="submit" value="Post Comment">
+                            </form>
+                        {% else %}
+                            <p>Please <a href="{% url 'accounts:login' %}">Login</a> to add comment</p>
+                        {% endif %}
+                    </div>
+                </footer>
+                <!-- .entry-footer -->
+            </article>
+            <!-- #post-## -->
+            <nav class="navigation post-navigation" role="navigation">
+                <h1 class="screen-reader-text">Post navigation</h1>
+                <div class="nav-links">
+                    <div class="nav-previous">
+                        <a href="{% url 'blog:home' %}" rel="prev"><span class="meta-nav">←</span> Thanks for watching!</a>
+                    </div>
+                </div>
+                <!-- .nav-links -->
+            </nav>
+            <!-- .navigation -->
+            <div id="comments" class="comments-area">
+                <div>
+                    <h3>Recent Comments</h3>
+                    {% for comment in comments %}
+                        <div style="display: inline-block;">
+                            <h5>@{{comment.User.username}} </h5>
+                            <p>{{comment.time}}</p>
+                        </div>
+                        
+                        <p>{{comment.message|safe}}</p>
+                        {% if user.is_authenticated %}
+                            {% if user.username == comment.User.username %}
+                                <button  class="btn btn-danger" id="del_comment" style="color: white;" onclick="myfunction()"> Delete Comment ?</button>
+                            {% endif %}
+                        {% endif %}
+                        <div id="del_confirm" style="display: none;">
+                            {% csrf_token %}
+                            <form action="{% url 'blog:comment_delete' post.slug comment.pk %}" method="post">
+                                <p>Are Your Sure you want to delete {{object}}</p>
+                                <input type="submit" value="Confirm" class="btn btn-danger">
+                            </form>
+                        </div>
+                        <hr>                     
+                    {% endfor %}
+
+                    
+                </div>
+            </div>
+            <!-- #comments -->
+            </main>
+            <!-- #main -->
+        </div>
+        <div id="secondary" class="column third">
+            <div id="sidebar-1" class="widget-area" role="complementary">
+                <aside id="text-5" class="widget widget_text">
+                <h4 class="widget-title">About Author - @{{post.auther.username}}</h4>
+                <div class="textwidget">
+                    <p>
+                        <img src="{{post.auther.userprofile.profilepic.url}}" class="alignleft" style="width:80px;border-radius:50%;margin-bottom:0;"> {{post.auther.userprofile.bio}}
+                    </p>
+                </div>
+                </aside>
+                <aside id="recent-posts-2" class="widget widget_recent_entries" style="margin-top: 75px;">
+                <h4 class="widget-title">Recent Posts</h4>
+                <ul>
+                    {% for posts in all_posts %}
+                        <li>
+                            <a href="{% url 'blog:post_detail' posts.slug  %}">{{posts.title}}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                </aside>
+                
+                <aside id="text-7" class="widget widget_text">
+                <h4 class="widget-title">Follow Author</h4>
+                {% if post.auther.userprofile.website_url %}
+                    <a href="{{post.auther.userprofile.website_url}}"><img src="{% static 'images/website.png' %}" style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+
+                {% if post.auther.userprofile.facebook_url %}
+                    <a href="{{post.auther.userprofile.facebook_url}}"><img src="{% static 'images/facebook_icon.png' %}" style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+
+                {% if post.auther.userprofile.instagram_url %}
+                    <a href="{{post.auther.userprofile.instagram_url}}"><img src="{% static 'images/instagram.png' %}" style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+
+                {% if post.auther.userprofile.twitter_url %}
+                    <a href="{{post.auther.userprofile.twitter_url}}"><img src="{% static 'images/twitter.png' %}" style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+
+                {% if post.auther.userprofile.pintrest_url %}
+                    <a href="{{post.auther.userprofile.pintrest_url}}"><img src="{% static 'images/pinterest.png' %}" style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+                
+                </aside>
+            </div>
+            <!-- .widget-area -->
+        </div>
+        <!-- #secondary -->
+    </div>
+    <!-- #content -->
+
+    <script>
+    
+        /*document.getElementById("del_confirm").style.display = "none";*/
+        function myfunction() {
+            document.getElementById("del_confirm").style.display = "block";
+        }
+        
+    </script>
+{% endblock %}
+

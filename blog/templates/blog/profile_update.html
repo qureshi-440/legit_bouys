@@ -1,0 +1,10 @@
+{% extends 'main.html' %}
+{% load bootstrap4 %}
+{% block content %}
+    <h2>Edit Profile</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <input type="submit" class="btn'btn-success btn-primary" value="Update">
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Username</td>
+                <td>First Name</td>
+                <td>last Name</td>
+            </tr>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td><img src="{{u.userprofile.profilepic.url}}" style="max-height: 75px;max-width:75px;"></td>
+                            <td><a href="{% url 'blog:profile_page' u.username %}">@{{u.username}}</a></td>
+                            <td>{{u.first_name}}</td>
+                            <td>{{u.last_name}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+        </thead>
+    </table>
+    
+{% endblock %}

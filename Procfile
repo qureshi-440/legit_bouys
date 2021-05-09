@@ -1,0 +1,1 @@
+web : gunicorn legit_bouys.wsgi --log-file -

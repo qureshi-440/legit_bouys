@@ -1,0 +1,52 @@
+{% extends 'main.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    <div >
+        <img src="{{user_profile.userprofile.profilepic.url}}" >
+        <h3>{{user_profile.first_name}} {{user_profile.last_name}}</h3>
+        <p>{{user_profile.userprofile.bio|safe}}</p>
+
+        {{user.username}}
+        {{user_profile.username}}
+
+        <h6>Social links </h6>
+        {% if user_profile.userprofile.website_url %}
+            <a href="{{user_profile.userprofile.website_url}}"><img src="{% static 'images/website.png' %}"  style="max-height: 50px;max-width:50px"></a>
+        {% endif %}
+        {% if user_profile.userprofile.facebook_url %}
+            <a href="{{user_profile.userprofile.facebook_url}}"><img src="{% static 'images/facebook_icon.png' %}"  style="max-height: 50px;max-width:50px">
+            </a>
+        {% endif %}
+        {% if user_profile.userprofile.instagram_url %}
+            <a href="{{user_profile.userprofile.instagram_url}}"><img src="{% static 'images/instagram.png' %}"  style="max-height: 50px;max-width:50px"></a>
+        {% endif %}
+        {% if user_profile.userprofile.twitter_url %}
+            <a href="{{user_profile.userprofile.twitter_url}}"><img src="{% static 'images/twitter.png' %}"  style="max-height: 50px;max-width:50px"></a>
+        {% endif %}
+        {% if user_profile.userprofile.pintrest_url %}
+            <a href="{{user_profile.userprofile.pintrest_url}}"><img src="{% static 'images/pinterest.png' %}"  style="max-height: 50px;max-width:50px"></a>
+        {% endif %}
+        <br>
+        {% if user.is_authenticated %}
+            {% if user.username == user_profile.username %}
+                <a href="{% url 'blog:profile_update' user_profile.username user_profile.userprofile.id  %}"><button class="btn btn-primary btn-large" >Edit profile</button></a>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div>
+        <h4>Posts by @{{user_profile.username}}</h4>
+        {% for posts in user_posts %}
+            <h6>{{posts.title}}</h6>
+            <p>{{posts.created_date}}</p>
+            {% if user.is_authenticated %}
+                {% if user.username == user_profile.username %}
+                    <a href="{% url 'blog:post_update' posts.slug posts.pk %}" class="btn btn-primary">Edit Post</a>
+                    <a href="{% url 'blog:post_delete' posts.slug posts.pk %}" class="btn btn-danger">Delete post</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
