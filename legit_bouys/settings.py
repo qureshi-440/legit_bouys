@@ -21,7 +21,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'blog/templates')
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("LEGIT_BOUYS SECRET_KEY")
+SECRET_KEY = "wx78+jgqtmr&e-!o3qw#96((2_$bdm8#f4p@l775vf!-*k=8-^"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -123,7 +123,7 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR , 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static'),] 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
