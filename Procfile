@@ -1,1 +1,1 @@
-web : gunicorn legit_bouys.wsgi
+web: gunicorn legit_bouys.wsgi
