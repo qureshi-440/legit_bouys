@@ -1,0 +1,144 @@
+{% extends 'main2.html' %}
+{% load static %}
+{% load hitcount_tags %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+    <style>
+        .ck-editor__editable {
+            max-height: 400px;
+            max-width: 600px;
+        }
+    </style>    
+
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card ">
+                <div class="card-body">
+                    <h3 class="card-title">{{post.title}}</h3>
+                    <span><a class="text-muted">{{post.created_date}}</a></span>
+                    <br><br><br><br>
+                    <p class="card-text"id="body-img">{{post.body|safe}}</p>
+                    <form action="{% url 'blog:post_like' post.pk %}" method="post">
+                        {% csrf_token %}
+                        {% if liked %}
+                            <button type="submit" style="background: none;border:none" ><img src="{% static 'images/liked.png' %}" style="max-height: 75px;max-width:75px;" ></button>
+                        {% else %}
+                            <button type="submit" style="background: none;border:none" ><img src="{% static 'images/like.png' %}" style="max-height: 75px;max-width:75px" ></button>
+                            <p>like</p>
+                        {% endif %}
+                    </form>
+                    <br>
+                    <div class="nav-previous">
+                        <a href="{% url 'blog:home' %}" rel="prev"><span class="meta-nav">←</span> Thanks for Reading!</a>
+                    </div>
+                </div>
+            </div>
+                    
+            <br><br>    
+                <div>
+                    {% if user.is_authenticated %}
+                        <h3>Add Comment</h3>
+                        <form action="{% url 'blog:create_comment' post.slug %}" method="post">
+                            {% csrf_token %}
+                            <label for="message">Message</label>
+                            <!-- <input type="textarea" name="message"> -->
+                            <textarea name="message" id="" cols="30" rows="5"></textarea>
+                            <input type="submit" value="Post Comment">
+                        </form>
+                    {% else %}
+                        <br>
+                        <p>Please <a href="{% url 'accounts:login' %}">Login</a> to add comment</p>
+                    {% endif %}
+                    
+                    <br><br>
+
+                    <h5>Comments ({{post.comments.count}}) </h5>
+                    {% if comments %}
+                        {% for comment in comments %}
+                        <div class="card ">
+                            <div class="card-body">
+                            <p class="card-text">{{comment.message}}</p>
+                            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            <div class="card-footer text-muted">
+                                <p>By @{{comment.User.username}} | On {{comment.time}}</p>
+                            </div>
+                        </div>
+                        <br><br>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">There are no comments on this post</p>   
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            
+              
+        </div>
+        <div class="col-sm-4">
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="card-header">About Author</div>
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{post.auther.userprofile.profilepic.url}}" class="img-fluid">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{post.auther.first_name}} {{post.auther.last_name}}</h5>
+                      <p class="card-text">{{post.auther.userprofile.bio}}</p>
+                      <!-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> -->
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="card mb-3" style="max-width: 540px;">
+                
+                <div class="row g-0">
+                    <div class="card-body">
+                      <h5 class="card-title">Follow Auther</h5>
+                      <p class="card-text">
+                            {% if post.auther.userprofile.website_url %}
+                                <a href="{{post.auther.userprofile.website_url}}"><img src="{% static 'images/website.png' %}" style="max-height: 50px;max-width:50px"></a>
+                            {% endif %}
+            
+                            {% if post.auther.userprofile.facebook_url %}
+                                <a href="{{post.auther.userprofile.facebook_url}}"><img src="{% static 'images/facebook_icon.png' %}" style="max-height: 50px;max-width:50px"></a>
+                            {% endif %}
+            
+                            {% if post.auther.userprofile.instagram_url %}
+                                <a href="{{post.auther.userprofile.instagram_url}}"><img src="{% static 'images/instagram.png' %}" style="max-height: 50px;max-width:50px"></a>
+                            {% endif %}
+            
+                            {% if post.auther.userprofile.twitter_url %}
+                                <a href="{{post.auther.userprofile.twitter_url}}"><img src="{% static 'images/twitter.png' %}" style="max-height: 50px;max-width:50px"></a>
+                            {% endif %}
+            
+                            {% if post.auther.userprofile.pintrest_url %}
+                                <a href="{{post.auther.userprofile.pintrest_url}}"><img src="{% static 'images/pinterest.png' %}" style="max-height: 50px;max-width:50px"></a>
+                            {% endif %}
+                        </p>                      
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("body-img").querySelectorAll("img");
+            var i;
+            for (i = 0; i < x.length; i++) {
+              x[i].style.maxHeight = "400px";
+              x[i].style.maxWidth = "600px"
+            }
+        }
+        myFunction();
+    </script>
+
+{% endblock %}

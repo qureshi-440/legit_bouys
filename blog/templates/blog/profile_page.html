@@ -1,10 +1,11 @@
-{% extends 'main.html' %}
+{% extends 'main2.html' %}
 {% load static %}
+{% load hitcount_tags %}
 
 
 
 {% block content %}
-    <div >
+    <!-- <div >
         <img src="{{user_profile.userprofile.profilepic.url}}" >
         <h3>{{user_profile.first_name}} {{user_profile.last_name}}</h3>
         <p>{{user_profile.userprofile.bio|safe}}</p>
@@ -48,5 +49,86 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
+    </div> -->
+
+
+
+    <div class="row">
+        <div class="col text-center">
+            <div>
+                <img src="{{user_profile.userprofile.profilepic.url}}" style="max-height: 300px;max-width:300px;border-radius:50%;">
+                <br><br>
+            </div>
+            <div >
+                <h2> {{user_profile.first_name}} {{user_profile.last_name}}</h2>
+                <br><br>
+            </div>
+            <div >
+                <p>{{user_profile.userprofile.bio|safe}}</p>
+                <br><br>
+            </div>
+            {% if user.is_authenticated %}
+                {% if user.username == user_profile.username %}
+                    <a href="{% url 'blog:profile_update' user_profile.username user_profile.userprofile.id  %}"><button class="btn btn-primary btn-large" >Edit profile</button></a>
+                {% endif %}
+                <br><br>
+            {% endif %}
+            <div>
+                <h4>Social links </h4>
+                <br>
+                {% if user_profile.userprofile.website_url %}
+                    <a href="{{user_profile.userprofile.website_url}}"><img src="{% static 'images/website.png' %}"  style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+                {% if user_profile.userprofile.facebook_url %}
+                    <a href="{{user_profile.userprofile.facebook_url}}"><img src="{% static 'images/facebook_icon.png' %}"  style="max-height: 50px;max-width:50px">
+                    </a>
+                {% endif %}
+                {% if user_profile.userprofile.instagram_url %}
+                    <a href="{{user_profile.userprofile.instagram_url}}"><img src="{% static 'images/instagram.png' %}"  style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+                {% if user_profile.userprofile.twitter_url %}
+                    <a href="{{user_profile.userprofile.twitter_url}}"><img src="{% static 'images/twitter.png' %}"  style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+                {% if user_profile.userprofile.pintrest_url %}
+                    <a href="{{user_profile.userprofile.pintrest_url}}"><img src="{% static 'images/pinterest.png' %}"  style="max-height: 50px;max-width:50px"></a>
+                {% endif %}
+                <br>
+            </div>
+            <br><br><br><br>
+            <h4>User Posts ({{user_posts.count}}) </h4>
+            <br><br>
+            <div class="card">
+                {% if user_posts %}
+                    {% for post in user_posts %}
+                        <div class="card bg-light mb-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                            <div class="card-header bg-transparent border-success">
+                                <!-- <h5>Author : @{{post.auther.username}}</h5> -->
+                                <span class="cat-links">
+                                    <a  rel="category tag">Views: {% get_hit_count for post %} | </a> <a  rel="category tag">comments : {{post.comments.count}} | </a> <a  rel="category tag">likes : {{post.get_likes}}</a>
+                                </span>    
+                            </div>
+                            <div class="card-body">
+                                <h2 class="card-title"><a href="{% url 'blog:post_detail' post.slug  %}">{{post.title}}</a></h2>
+                                <p class="card-text">{{post.snippet|safe}} <br> <a href="{% url 'blog:post_detail' post.slug  %}" class="btn-link">Continue Reading</a> </p>
+                                {% if post.thumbnail %}
+                                    <img src="{{post.thumbnail.url}}" class="card-img-bottom" style="max-height: 400x;max-width:600px">
+                                {% endif %}
+                            </div>
+                            <div class="card-footer bg-transparent border-success">
+                                <p class="card-text">Posted On : <small class="text-muted">{{post.created_date}}</small></p>
+                                <p><a href="{% url 'blog:post_update' post.slug post.pk %}" class="btn btn-info">Edit Post</a>   <a href="{% url 'blog:post_delete' post.slug post.pk %}" class="btn btn-danger">Delete Post</a></p>
+                            </div> 
+                        </div>
+                        <br><br>
+                    {% endfor %}
+                {% else %}
+                    <h5>No posts Yet...</h5>
+                {% endif %}    
+            </div>
+        </div>
     </div>
+
+
+
+
 {% endblock %}

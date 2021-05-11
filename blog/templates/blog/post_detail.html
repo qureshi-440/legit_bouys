@@ -1,9 +1,14 @@
-{% extends 'main.html' %}
+{% extends 'main2.html' %}
 {% load static %}
 {% load hitcount_tags %}
 {% load bootstrap4 %}
 
 {% block content %}
+
+    <!-- <style>
+        .entry-content
+    </style>     -->
+
     <div id="content" class="site-content">
         <div id="primary" class="content-area column two-thirds">
             <main id="main" class="site-main" role="main">
@@ -15,14 +20,14 @@
                             <span class="comments-link"><a href="#comments">Leave a comment</a></span>
                             <span><p>Page Views : {% get_hit_count for post %}</p></span>
                         </div>
-                    {% if post.thumbnail %}
+                    <!-- {% if post.thumbnail %}
                         <div class="entry-thumbnail">					
                             <img src="{{post.thumbnail.url}}" alt="">
                         </div>
-                    {% endif %}
+                    {% endif %} -->
                 </header>
             <!-- .entry-header -->
-                <div class="entry-content">
+                <div class="entry-content img-fluid">
                     {{post.body|safe}}
                     <span><p>likes - {{post.get_likes}}</p></span>
                 </div>
@@ -55,6 +60,7 @@
                                 <input type="submit" value="Post Comment">
                             </form>
                         {% else %}
+                            <br><br>
                             <p>Please <a href="{% url 'accounts:login' %}">Login</a> to add comment</p>
                         {% endif %}
                     </div>
@@ -62,42 +68,41 @@
                 <!-- .entry-footer -->
             </article>
             <!-- #post-## -->
-            <nav class="navigation post-navigation" role="navigation">
+            <!-- <nav class="navigation post-navigation" role="navigation">
                 <h1 class="screen-reader-text">Post navigation</h1>
-                <div class="nav-links">
+                <div class="nav-links"> -->
+                    <br><br>
                     <div class="nav-previous">
                         <a href="{% url 'blog:home' %}" rel="prev"><span class="meta-nav">←</span> Thanks for watching!</a>
                     </div>
-                </div>
-                <!-- .nav-links -->
-            </nav>
+                    <br>
+                <!-- </div>
+                .nav-links
+            </nav> -->
             <!-- .navigation -->
             <div id="comments" class="comments-area">
                 <div>
-                    <h3>Recent Comments</h3>
-                    {% for comment in comments %}
-                        <div style="display: inline-block;">
-                            <h5>@{{comment.User.username}} </h5>
-                            <p>{{comment.time}}</p>
+                    <h3>Comments</h3>
+                    {% if comments %}
+                        {% for comment in comments %}
+                        <div class="card ">
+                            <div class="card-body">
+                            <p class="card-text">{{comment.message}}</p>
+                            <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                            </div>
+                            <div class="card-footer text-muted">
+                                <p>By @{{comment.User.username}} | On {{comment.time}}</p>
+                            </div>
                         </div>
-                        
-                        <p>{{comment.message|safe}}</p>
-                        {% if user.is_authenticated %}
-                            {% if user.username == comment.User.username %}
-                                <button  class="btn btn-danger" id="del_comment" style="color: white;" onclick="myfunction()"> Delete Comment ?</button>
-                            {% endif %}
-                        {% endif %}
-                        <div id="del_confirm" style="display: none;">
-                            {% csrf_token %}
-                            <form action="{% url 'blog:comment_delete' post.slug comment.pk %}" method="post">
-                                <p>Are Your Sure you want to delete {{object}}</p>
-                                <input type="submit" value="Confirm" class="btn btn-danger">
-                            </form>
+                        <br><br>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">There are no comments on this post</p>   
+                            </div>
                         </div>
-                        <hr>                     
-                    {% endfor %}
-
-                    
+                    {% endif %}
                 </div>
             </div>
             <!-- #comments -->
@@ -106,25 +111,6 @@
         </div>
         <div id="secondary" class="column third">
             <div id="sidebar-1" class="widget-area" role="complementary">
-                <aside id="text-5" class="widget widget_text">
-                <h4 class="widget-title">About Author - @{{post.auther.username}}</h4>
-                <div class="textwidget">
-                    <p>
-                        <img src="{{post.auther.userprofile.profilepic.url}}" class="alignleft" style="width:80px;border-radius:50%;margin-bottom:0;"> {{post.auther.userprofile.bio}}
-                    </p>
-                </div>
-                </aside>
-                <aside id="recent-posts-2" class="widget widget_recent_entries" style="margin-top: 75px;">
-                <h4 class="widget-title">Recent Posts</h4>
-                <ul>
-                    {% for posts in all_posts %}
-                        <li>
-                            <a href="{% url 'blog:post_detail' posts.slug  %}">{{posts.title}}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-                </aside>
-                
                 <aside id="text-7" class="widget widget_text">
                 <h4 class="widget-title">Follow Author</h4>
                 {% if post.auther.userprofile.website_url %}
@@ -146,10 +132,25 @@
                 {% if post.auther.userprofile.pintrest_url %}
                     <a href="{{post.auther.userprofile.pintrest_url}}"><img src="{% static 'images/pinterest.png' %}" style="max-height: 50px;max-width:50px"></a>
                 {% endif %}
-                
+                <br><br>
                 </aside>
             </div>
             <!-- .widget-area -->
+            <div class="card mb-3" style="max-width: 540px;">
+                <div class="card-header">About Author</div>
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{post.auther.userprofile.profilepic.url}}" class="img-fluid">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5 class="card-title">{{post.auther.first_name}} {{post.auther.last_name}}</h5>
+                      <p class="card-text">{{post.auther.userprofile.bio}}</p>
+                      <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                  </div>
+                </div>
+            </div>
         </div>
         <!-- #secondary -->
     </div>
@@ -161,6 +162,9 @@
         function myfunction() {
             document.getElementById("del_confirm").style.display = "block";
         }
+
+        body_img = document.getElementsByClassName("entry-content p img");
+        body_img.classList.add("img-fluid")
         
     </script>
 {% endblock %}

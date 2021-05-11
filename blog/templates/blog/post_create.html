@@ -1,4 +1,4 @@
-{% extends 'main.html' %}
+{% extends 'main2.html' %}
 {% load bootstrap4 %}
 
 {% block content %}
@@ -7,6 +7,6 @@
         {% csrf_token %}
         {{form.media}}
         {% bootstrap_form form %}
-        <input type="submit" value="Post" class="btn'btn-success btn-primary">
+        <input type="submit" value="Post" class="btn btn-success btn-primary">
     </form>
 {% endblock %}

@@ -62,7 +62,7 @@ class postcreate(CreateView,LoginRequiredMixin):
 class postdetail(HitCountDetailView):
     model = Post
     context_object_name = 'post'
-    template_name = 'blog/post_detail.html'
+    template_name = 'blog/post_detail2.html'
     count_hit = True
 
     def get_context_data(self,*args,**kwargs):
