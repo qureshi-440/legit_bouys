@@ -17,6 +17,7 @@ urlpatterns = [
     path("post-delete/<slug>/<pk>/",views.postDelete.as_view(),name="post_delete"),
     path("post-detail/<slug>/comment/",views.CommentCreate.as_view(),name="create_comment"),
     path("delete-comment/<slug>/<pk>/",views.CommentDelete.as_view(),name="comment_delete"),
+    path("follow/<pk>",views.follow_user,name="follow")
 ]
 
 urlpatterns = urlpatterns + static(settings.MEDIA_URL ,document_root= settings.MEDIA_ROOT)

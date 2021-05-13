@@ -18,12 +18,26 @@ class UserProfile(models.Model):
     instagram_url = models.URLField(null=True,blank=True)
     twitter_url = models.URLField(null=True,blank=True)
     pintrest_url = models.URLField(null=True,blank=True)
+    follow = models.ManyToManyField(User,blank=True,related_name="follows")
 
     def __str__(self):
         return str(self.user)
 
     def get_absolute_url(self):
         return reverse("blog:home")
+
+    @property
+    def total_followers(self):
+        return self.follow.count()
+
+    @property
+    def follower_names(self):
+        follower_list = []
+        for a in self.follow.all():
+            follower_list.append(a)
+        return follower_list
+        # return " , ".join(a.username for a in self.follow.all())
+
 
 class Post(models.Model):
     title = models.CharField(max_length=100)

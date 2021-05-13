@@ -18,6 +18,10 @@
                 <div class="card-body">
                     <h3 class="card-title">{{post.title}}</h3>
                     <span><a class="text-muted">{{post.created_date}}</a></span>
+                    <br>
+                    <span class="cat-links">
+                        <a  rel="category tag">Page Views: {% get_hit_count for post %} | </a> <a  rel="category tag">comments : {{post.comments.count}} | </a> <a  rel="category tag">likes : {{post.get_likes}}</a>
+                    </span>
                     <br><br><br><br>
                     <p class="card-text"id="body-img">{{post.body|safe}}</p>
                     <form action="{% url 'blog:post_like' post.pk %}" method="post">

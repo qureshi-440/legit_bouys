@@ -67,12 +67,68 @@
                 <p>{{user_profile.userprofile.bio|safe}}</p>
                 <br><br>
             </div>
+            <div style="border: 2px 2px grey;">
+                <p>Total Followers : <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    {{user_profile.userprofile.total_followers}}
+                </button></p>
+            </div>
+
+            <div>
+                <!-- Button trigger modal -->    
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Followers</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Username</td>
+                                    <td>Follow</td>
+                                </tr>
+                            </thead>
+                            {% for followers in user_profile.userprofile.follower_names %}
+                                <tbody>
+                                    <tr>
+                                        <td><img src="{{followers.userprofile.profilepic.url}}" style="max-height: 50px;max-width:50px;border-radius:50%;"></td>
+                                        <td><a href="{% url 'blog:profile_page' followers  %}">@{{followers}}</a></td>
+                                        {% if followers.userprofile %}
+                                            <td><a href="{% url 'blog:follow' followers.userprofile.pk  %}" class="btn btn-info">Follow</a></td>
+                                        {% endif %}
+                                    </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if user_follow %}
+                <a href="{% url 'blog:follow' user_profile.userprofile.pk  %}" class="btn btn-danger">Unfollow</a>
+            {% else %}
+                <a href="{% url 'blog:follow' user_profile.userprofile.pk  %}" class="btn btn-info">Follow</a>
+            {% endif %}
+            
             {% if user.is_authenticated %}
                 {% if user.username == user_profile.username %}
                     <a href="{% url 'blog:profile_update' user_profile.username user_profile.userprofile.id  %}"><button class="btn btn-primary btn-large" >Edit profile</button></a>
                 {% endif %}
                 <br><br>
             {% endif %}
+            <br><br><br>
             <div>
                 <h4>Social links </h4>
                 <br>
@@ -116,7 +172,11 @@
                             </div>
                             <div class="card-footer bg-transparent border-success">
                                 <p class="card-text">Posted On : <small class="text-muted">{{post.created_date}}</small></p>
-                                <p><a href="{% url 'blog:post_update' post.slug post.pk %}" class="btn btn-info">Edit Post</a>   <a href="{% url 'blog:post_delete' post.slug post.pk %}" class="btn btn-danger">Delete Post</a></p>
+                                {% if user.is_authenticated %}
+                                    {% if user.username == post.auther.username %}
+                                        <p><a href="{% url 'blog:post_update' post.slug post.pk %}" class="btn btn-info">Edit Post</a>   <a href="{% url 'blog:post_delete' post.slug post.pk %}" class="btn btn-danger">Delete Post</a></p>
+                                    {% endif %}
+                                {% endif %}
                             </div> 
                         </div>
                         <br><br>

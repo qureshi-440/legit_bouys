@@ -32,7 +32,10 @@ class profile(CreateView,LoginRequiredMixin):
 def profile_page(request,username):
     user_profile = get_object_or_404(User,username=username)
     user_posts = Post.objects.filter(auther__username__iexact=username)
-    return render(request,'blog/profile_page.html',{"user_profile":user_profile,'user_posts':user_posts})
+    user_follow = False
+    if user_profile.userprofile.follow.filter(id=request.user.id).exists():
+        user_follow = True
+    return render(request,'blog/profile_page.html',{"user_profile":user_profile,'user_posts':user_posts,'user_follow':user_follow})
 
 class update_profile(UpdateView):
     model = UserProfile
@@ -95,6 +98,12 @@ class postUpdate(UpdateView,LoginRequiredMixin):
     form_class = PostUpdateForm
     template_name = 'blog/post_update.html'
 
+    def get_object(self,*args,**kwargs):
+        obj = super().get_object(*args,**kwargs)
+        if obj.auther != self.request.user:
+            raise PermissionDenied()
+        return obj
+
 class postDelete(DeleteView,LoginRequiredMixin):
     model = Post
     template_name = 'blog/post_delete_confirm.html'
@@ -127,4 +136,11 @@ class CommentDelete(DeleteView,LoginRequiredMixin):
             raise PermissionDenied()
         return obj
 
-    
+@login_required
+def follow_user(request,pk):
+    profile = get_object_or_404(UserProfile,id=pk)
+    if profile.follow.filter(id=request.user.id).exists():
+        profile.follow.remove(request.user)
+    else:
+        profile.follow.add(request.user)
+    return HttpResponseRedirect(reverse("blog:profile_page",kwargs={'username':profile.user.username}))

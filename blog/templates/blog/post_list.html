@@ -22,7 +22,7 @@
     {% for post in posts %}
         <div class="card bg-light mb-3" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
             <div class="card-header bg-transparent border-success">
-                <h5>Author : @{{post.auther.username}}</h5>
+                <h5>Author : <a href="{% url 'blog:profile_page' post.auther.username  %}">@{{post.auther.username}}</a></h5>
                 <span class="cat-links">
                     <a  rel="category tag">Views: {% get_hit_count for post %} | </a> <a  rel="category tag">comments : {{post.comments.count}} | </a> <a  rel="category tag">likes : {{post.get_likes}}</a>
                 </span>    
