@@ -20,7 +20,7 @@ class register(CreateView):
         password = self.request.POST['password1']
         user = authenticate(username= form.cleaned_data['username'],password= form.cleaned_data["password1"])
         login(self.request,user)
-        return HttpResponseRedirect(reverse("blog:profile_create"))
+        return HttpResponseRedirect(reverse("blog:profile_update",kwargs = {'username':self.request.user.username,'pk':self.request.user.userprofile.pk}))
 
 # class Allusers(ListView):
 #     model = User
