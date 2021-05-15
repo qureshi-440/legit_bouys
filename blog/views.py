@@ -40,7 +40,7 @@ def profile_page(request,username):
 class update_profile(UpdateView):
     model = UserProfile
     form_class = UserProfileForm
-    template_name = 'blog/profile_update.html'
+    template_name = 'blog/profile_create.html'
 
     def get_object(self,*args,**kwargs):
         obj = super().get_object(*args,**kwargs)
