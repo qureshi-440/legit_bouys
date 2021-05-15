@@ -25,8 +25,8 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'blog/templates')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool)
+# SECURITY WARNING: don't run with debug turned on in production! config("DEBUG", cast=bool)
+DEBUG = True
 
 ALLOWED_HOSTS =  ['localhost','127.0.0.1','legit-blog.herokuapp.com']
 
