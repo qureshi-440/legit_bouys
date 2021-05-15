@@ -49,7 +49,7 @@ class UserProfile(models.Model):
     @receiver(post_save,sender=User)
     def update_profile(sender,instance,created,**kwargs):
         if created == False:
-            instance.UserProfile.save()
+            instance.userprofile.save()
             
 
 
